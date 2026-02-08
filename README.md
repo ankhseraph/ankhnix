@@ -1,5 +1,5 @@
 > [!NOTE]
-> This README was written with the assistance of an LLM. While the information is based on the actual configuration files, verify details against the source before relying on them.
+> This README was written with the assistance of and largely by an LLM. I have checked essentially everything and added notes where relevant.
 > The actual configuration is entirely configured by myself. I use LLMs to assist (as most coders should). Essentially every line of code is written by myself. It is entirely a passion project of mine that I have become quite proud of.
 > For even more transparency, yes, I use Claude Code. This is mostly for doing tasks like cleaning up formatting, rearranging files, removing stupid comments, searching for conflicts etc.
 
@@ -186,6 +186,8 @@ nix-commit
 | `DP-1` | 2560×1440 | 120 Hz | 0,0 | 1 |
 | `HDMI-A-1` | 1920×1080 | 71.92 Hz | 2560,380 | 2 |
 | `HDMI-A-2` | 1920×1080 | 60 Hz | 300,1440 | 3 |
+
+> HDMI-A-2 is my graphics tablet.
 
 ### Key Bindings (Sway)
 

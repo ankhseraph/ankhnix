@@ -56,9 +56,18 @@ This configuration uses **impermanence** with a persistent root at `/persist`. Y
 
 If you **don't want impermanence**, comment out the impermanence configuration in `system/core/impermanence.nix` or remove it from `system/default.nix`.
 
-### 4. Create credentials file (NAS)
+### 4. Create NAS configuration files
 
-The NAS mount at `/mnt/nas` reads credentials from `./credentials` (gitignored):
+The NAS mount at `/mnt/nas` requires two files:
+
+**nas-secrets.nix** (gitignored) — Copy from template and fill in your details:
+
+```bash
+cp ~/.nix/nas-secrets.nix.example ~/.nix/nas-secrets.nix
+nano ~/.nix/nas-secrets.nix
+```
+
+**credentials** (gitignored) — CIFS password file:
 
 ```bash
 nano ~/.nix/credentials
@@ -81,7 +90,7 @@ Before building, review and update the following for your setup:
 
 - `configuration.nix` — `hashedPassword` (generate with `mkpasswd`)
 - `system/network/base.nix` — hostname
-- `system/network/storage.nix` — NAS IP and share path
+- `nas-secrets.nix` — NAS IP, share name, and username
 - `home/desktop/sway.nix` — monitor outputs, modes, and positions
 - `system/services/backups.nix` — backup source/destination paths
 - `system/core/impermanence.nix` — persisted directories and files
@@ -134,7 +143,7 @@ home/
     theme.nix                # GTK theme
     packages.nix             # bemenu, pavucontrol, mpv, grim, slurp, hyprpicker, wl-clipboard
   shell/
-    zsh/zsh.nix              # Zsh config with aliases, prompt, and nix-commit function
+    zsh/zsh.nix              # Zsh config with aliases and nix-commit function
     zsh/prompt.zsh           # Zsh custom prompt
     zsh/nix-commit.zsh       # nix-commit function (rebuild → commit → push)
     alacritty.nix            # Terminal emulator

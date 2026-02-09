@@ -14,7 +14,7 @@ Personal NixOS flake configuration for a daily-driven desktop. Prioritizes minim
 | Component | Detail |
 |---|---|
 | **Host** | `kuraokami` |
-| **User** | `ankhangel` |
+| **User** | Configured in `flake.nix:19` |
 | **OS** | NixOS 25.11 (stable) |
 | **Kernel** | Linux Zen |
 | **WM** | Sway (Wayland) |
@@ -175,7 +175,7 @@ This system uses **impermanence** with ephemeral root and persistent storage at 
 - `/var/lib/NetworkManager` — network connections
 - `/etc/machine-id` — machine identifier
 
-**User-level (ankhangel):**
+**User-level:**
 - `nix-config` — this repository
 - `Downloads`, `Documents`, `Pictures`, `Videos` — user files
 - `.ssh`, `.gnupg`, `.local/share/keyrings` — credentials

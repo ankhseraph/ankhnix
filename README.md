@@ -1,11 +1,11 @@
-> [!NOTE]
+>  [!NOTE]
 > This README was written with the assistance of and largely by an LLM. I have checked essentially everything and added notes where relevant.
 > The actual configuration is entirely configured by myself. I use LLMs to assist (as most coders should). Essentially every line of code is written by myself. It is entirely a passion project of mine that I have become quite proud of.
 > For even more transparency, yes, I use Claude Code. This is mostly for doing tasks like cleaning up formatting, rearranging files, removing stupid comments, searching for conflicts etc.
 
-# Kuroakami — NixOS Configuration
+# Kuraokami — NixOS Configuration
 
-Personal NixOS flake configuration for a daily-driven desktop. Prioritizes minimalism, privacy, security hardening, and a functional riced Sway environment.
+Personal NixOS flake configuration for a daily-driven desktop. Prioritizes minimalism, privacy, security hardening, impermanence, and a functional riced Sway environment.
 
 ---
 
@@ -18,11 +18,12 @@ Personal NixOS flake configuration for a daily-driven desktop. Prioritizes minim
 | **OS** | NixOS 25.11 (stable) |
 | **Kernel** | Linux Zen |
 | **WM** | Sway (Wayland) |
-| **Shell** | Zsh (default), Fish |
+| **Shell** | Zsh |
 | **Terminal** | Alacritty |
 | **CPU** | AMD (Ryzen) |
 | **GPU** | AMD (overdrive enabled) |
 | **Audio** | Pipewire + JACK |
+| **Root** | Impermanent (ephemeral) |
 
 ---
 
@@ -31,7 +32,7 @@ Personal NixOS flake configuration for a daily-driven desktop. Prioritizes minim
 ### 1. Clone the repository
 
 ```bash
-git clone git@codeberg.org:ankhseraph/nix-desktop.git ~/.nix
+git clone git@codeberg.org:ankhseraph/kuraokami.git ~/.nix
 cd ~/.nix
 ```
 
@@ -45,7 +46,17 @@ nixos-generate-config --show-hardware-config > hardware/hardware-configuration.n
 
 Review `hardware/tweaks.nix` and adjust GPU/CPU settings for your hardware.
 
-### 3. Create credentials file (NAS)
+### 3. Set up impermanence
+
+This configuration uses **impermanence** with a persistent root at `/persist`. You'll need to:
+
+1. Create a `/persist` directory on your filesystem
+2. Configure your filesystem to wipe root on reboot (e.g., tmpfs root or Btrfs with rollback)
+3. Review `system/core/impermanence.nix` and adjust persisted paths for your needs
+
+If you **don't want impermanence**, comment out the impermanence configuration in `system/core/impermanence.nix` or remove it from `system/default.nix`.
+
+### 4. Create credentials file (NAS)
 
 The NAS mount at `/mnt/nas` reads credentials from `./credentials` (gitignored):
 
@@ -64,7 +75,7 @@ chmod 600 ~/.nix/credentials
 
 Skip this if you don't need the CIFS mount — remove or comment out `system/network/storage.nix` from `system/default.nix`.
 
-### 4. Update user-specific values
+### 5. Update user-specific values
 
 Before building, review and update the following for your setup:
 
@@ -73,8 +84,9 @@ Before building, review and update the following for your setup:
 - `system/network/storage.nix` — NAS IP and share path
 - `home/desktop/sway.nix` — monitor outputs, modes, and positions
 - `system/services/backups.nix` — backup source/destination paths
+- `system/core/impermanence.nix` — persisted directories and files
 
-### 5. Build and switch
+### 6. Build and switch
 
 ```bash
 sudo nixos-rebuild switch --flake ~/.nix/#kuraokami
@@ -95,12 +107,13 @@ system/
     boot.nix                 # Zen kernel, systemd-boot, kernel params, sysctl hardening
     nix.nix                  # Flakes, GC (10d), store optimization, allowed-users
     packages.nix             # System packages; unfree allowlist (steam, claude-code)
+    impermanence.nix         # Persistence rules for /persist (directories, files, per-user state)
   desktop/
     sway.nix                 # Sway + XWayland enable, OZONE_WL, xdg-desktop-portal-wlr
     fonts.nix                # JetBrains Mono, Noto (with Nerd Font variants)
     xdg.nix                  # XDG portal configuration
   hardware/
-    gpu.nix                  # LACT daemon + hardened systemd service config
+    gpu.nix                  # LACT daemon + hardened systemd service config (declarative)
     audio.nix                # Pipewire/ALSA/JACK, low-latency tuning, USB audio fix
     cpu.nix                  # scx_lavd scheduler, ananicy-rules-cachyos
     lact/config.yaml         # LACT GPU profile definitions (LOW/MID/MAX)
@@ -116,14 +129,14 @@ home/
   home.nix                   # Home-manager entry; imports all home modules
   desktop/
     sway.nix                 # Monitors, inputs, keybinds, colors, autostart, workspace assignment
-    waybar/                  # Status bar config and CSS
+    waybar/                  # Status bar config, CSS, and LACT profile switching script
     mako.nix                 # Notification daemon
     theme.nix                # GTK theme
     packages.nix             # bemenu, pavucontrol, mpv, grim, slurp, hyprpicker, wl-clipboard
   shell/
-    zsh/zsh.nix              # Zsh config
+    zsh/zsh.nix              # Zsh config with aliases, prompt, and nix-commit function
+    zsh/prompt.zsh           # Zsh custom prompt
     zsh/nix-commit.zsh       # nix-commit function (rebuild → commit → push)
-    fish.nix                 # Fish config, prompt, nix-commit function, fastfetch on start
     alacritty.nix            # Terminal emulator
     environment.nix          # Telemetry opt-out env vars
     packages.nix             # Shell utilities
@@ -145,8 +158,47 @@ home/
 | `nixpkgs` | `nixos-25.11` (stable) |
 | `unstable` | `nixos-unstable` |
 | `home-manager` | `release-25.11` |
+| `impermanence` | `master` |
 
 Unstable packages are accessed via `pkgs.unstable` (passed through `specialArgs`). Currently used for: Mesa, Vulkan loader, Feishin.
+
+---
+
+## Impermanence
+
+This system uses **impermanence** with ephemeral root and persistent storage at `/persist`.
+
+### What's Persisted
+
+**System-level:**
+- `/var/lib/nixos` — NixOS state
+- `/var/lib/systemd` — systemd state
+- `/var/log` — system logs
+- `/etc/ssh` — SSH host keys
+- `/var/lib/NetworkManager` — network connections
+- `/etc/machine-id` — machine identifier
+
+**User-level (ankhangel):**
+- `nix-config` — this repository
+- `Downloads`, `Documents`, `Pictures`, `Videos` — user files
+- `.ssh`, `.gnupg`, `.local/share/keyrings` — credentials
+- `.mozilla`, `.librewolf` — browser profiles
+- `.config/Proton`, `.config/vesktop`, `.config/FreeTube` — app configs
+- `.local/share/Steam` — game library
+- `.local/share/nvim`, `.local/state/nvim` — Neovim state
+- `.gitconfig` — Git configuration
+
+### What's Ephemeral (resets on reboot)
+
+- Everything in `/` not explicitly persisted
+- `/tmp` (tmpfs)
+- All caches (mesa shaders, fontconfig, etc.)
+- LACT GPU config (resets to MID profile via declarative config)
+- EasyEffects settings (managed declaratively)
+- Shell history (intentionally ephemeral)
+- Browser caches and temporary files
+
+This approach ensures a clean, reproducible system state on every boot while preserving essential data.
 
 ---
 
@@ -162,7 +214,7 @@ sudo nixos-rebuild switch --flake ~/.nix/#kuraokami
 nix-commit
 ```
 
-`nix-commit` is available in both Fish and Zsh. It:
+`nix-commit` is a Zsh function that:
 1. Shows `git diff --stat` of pending changes
 2. Runs `nixos-rebuild switch --show-trace`, logging to `/tmp/nix-build-log`
 3. On success: commits with message `Rebuild: <gen> (<date> <time>)` and pushes to `origin/main`
@@ -213,7 +265,11 @@ nix-commit
 
 ### GPU Profile Switching
 
-GPU profiles (LOW/MID/MAX) are managed by LACT and toggled via `Super+Z/X/C`. Switching also sends a signal to refresh Waybar (`pkill -RTMIN+8 waybar`).
+GPU profiles (LOW/MID/MAX) are managed declaratively via LACT. The config is defined in `system/hardware/lact/config.yaml` and deployed via `environment.etc`.
+
+- **Default profile:** MID (set on every boot)
+- **Runtime switching:** `Super+Z/X/C` (triggers Waybar refresh via `pkill -RTMIN+8 waybar`)
+- **Profile persistence:** None — always resets to MID on reboot (ephemeral by design)
 
 ---
 
@@ -225,7 +281,8 @@ GPU profiles (LOW/MID/MAX) are managed by LACT and toggled via `Super+Z/X/C`. Sw
 - Mesa sourced from `nixos-unstable`
 - 32-bit graphics support enabled (for Steam/Proton)
 - Full AMD feature mask: `amdgpu.ppfeaturemask=0xffffffff`
-- Runtime management via LACT daemon with hardened systemd service
+- Runtime management via LACT daemon with declarative config and hardened systemd service
+- Config resets to MID profile on every boot
 
 ### Audio
 
@@ -269,6 +326,7 @@ GPU profiles (LOW/MID/MAX) are managed by LACT and toggled via `Super+Z/X/C`. Sw
 - `protectKernelImage = true`
 - Display manager and coredump disabled
 - `execWheelOnly = true` for sudo
+- Hardened LACT systemd service (limited capabilities, restricted namespaces)
 
 ---
 
@@ -286,10 +344,11 @@ GPU profiles (LOW/MID/MAX) are managed by LACT and toggled via `Super+Z/X/C`. Sw
 
 ## Storage & Backup
 
-- Root: EXT4 (`/dev/disk/by-uuid/...`)
+- Root: Impermanent (ephemeral)
+- Persistent data: `/persist` (bind mount or separate partition)
 - Boot: VFAT (`/boot`)
 - No swap — zramSwap with zstd at 50% of RAM
-- tmpfs for `/tmp` (8 GB limit)
+- tmpfs for `/tmp` (ephemeral)
 - NAS: CIFS automount at `/mnt/nas` (SMB 3.1.1, idle-timeout 60s)
 - Daily systemd user timer backs up `~/.librewolf/` to `/mnt/nas/librewolf-backup/` via rsync
 
@@ -312,6 +371,7 @@ GPU profiles (LOW/MID/MAX) are managed by LACT and toggled via `Super+Z/X/C`. Sw
 | `nvfx` | `nvim .` |
 | `nasmount` | Manual CIFS mount for NAS |
 | `sysd-ui` | `systemd-manager-tui` |
+| `vpnissue` | Debug ProtonVPN connection (`ip -s link show proton0 && sudo wg show`) |
 | `bright` | SSH toggle for home server display backlight |
 
 ---

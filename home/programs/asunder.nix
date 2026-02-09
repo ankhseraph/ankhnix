@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ pkgs, username, ... }:
 
 {
-  home.file.".config/asunder/asunder".text = 
+  home.file.".config/asunder/asunder".text =
 ''
 /dev/cdrom
-/home/ankhangel/CD
+/home/${username}/CD
 0
 1
 %N - %T

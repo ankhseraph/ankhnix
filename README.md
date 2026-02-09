@@ -56,50 +56,38 @@ This configuration uses **impermanence** with a persistent root at `/persist`. Y
 
 If you **don't want impermanence**, comment out the impermanence configuration in `system/core/impermanence.nix` or remove it from `system/default.nix`.
 
-### 4. Create NAS configuration files
+### 4. Create secrets configuration
 
-The NAS mount at `/mnt/nas` requires two files:
-
-**nas-secrets.nix** (gitignored) — Copy from template and fill in your details:
+The system uses a centralized `secrets.nix` file (gitignored) for all sensitive data:
 
 ```bash
-cp ~/.nix/nas-secrets.nix.example ~/.nix/nas-secrets.nix
-nano ~/.nix/nas-secrets.nix
+cp ~/.nix/secrets.nix.example ~/.nix/secrets.nix
+nano ~/.nix/secrets.nix
 ```
 
-**credentials** (gitignored) — CIFS password file:
+Fill in your NAS credentials and any other secrets. The CIFS credentials file is automatically generated in `/etc/nas-credentials` during rebuild.
 
-```bash
-nano ~/.nix/credentials
-```
-
-```
-username=your_username
-password=your_password
-```
-
-```bash
-chmod 600 ~/.nix/credentials
-```
-
-Skip this if you don't need the CIFS mount — remove or comment out `system/network/storage.nix` from `system/default.nix`.
+Skip this if you don't need the NAS mount — remove or comment out `system/network/storage.nix` from `system/default.nix`.
 
 ### 5. Update user-specific values
 
 Before building, review and update the following for your setup:
 
+- `flake.nix` — `username` variable (line 19) to set your username throughout the config
 - `configuration.nix` — `hashedPassword` (generate with `mkpasswd`)
 - `system/network/base.nix` — hostname
-- `nas-secrets.nix` — NAS IP, share name, and username
+- `secrets.nix` — NAS credentials and other secrets
 - `home/desktop/sway.nix` — monitor outputs, modes, and positions
-- `system/services/backups.nix` — backup source/destination paths
-- `system/core/impermanence.nix` — persisted directories and files
+- `system/services/backups.nix` — backup source/destination paths (if needed)
+- `system/core/impermanence.nix` — persisted directories and files (if needed)
 
 ### 6. Build and switch
 
 ```bash
-sudo nixos-rebuild switch --flake ~/.nix/#kuraokami
+sudo nixos-rebuild switch --flake ~/.nix/#kuraokami --impure
 ```
+
+The `--impure` flag is required because the flake imports gitignored secrets.
 
 ---
 
@@ -217,11 +205,13 @@ This approach ensures a clean, reproducible system state on every boot while pre
 
 ```bash
 # Manual
-sudo nixos-rebuild switch --flake ~/.nix/#kuraokami
+sudo nixos-rebuild switch --flake ~/.nix/#kuraokami --impure
 
 # Automated (rebuild + git commit + push)
 nix-commit
 ```
+
+The `--impure` flag is required to access gitignored secrets.
 
 `nix-commit` is a Zsh function that:
 1. Shows `git diff --stat` of pending changes

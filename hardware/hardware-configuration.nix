@@ -8,20 +8,162 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "sr_mod" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/mapper/cryptroot";
+    { device = "/dev/disk/by-uuid/17c52675-9c32-403f-b556-b37f2a943482";
       fsType = "ext4";
     };
 
-  boot.initrd.luks.devices."cryptroot".device = "/dev/disk/by-uuid/2c5aa5bd-4f7a-4032-96e4-aa868e551e95";
+  fileSystems."/var/lib/nixos" =
+    { device = "/persist/var/lib/nixos";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/var/log" =
+    { device = "/persist/var/log";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/etc/ssh" =
+    { device = "/persist/etc/ssh";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.cache/mesa_shader_cache" =
+    { device = "/persist/home/ankhseraph/.cache/mesa_shader_cache";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.claude" =
+    { device = "/persist/home/ankhseraph/.claude";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.config/FreeTube" =
+    { device = "/persist/home/ankhseraph/.config/FreeTube";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.config/Signal" =
+    { device = "/persist/home/ankhseraph/.config/Signal";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.config/vesktop" =
+    { device = "/persist/home/ankhseraph/.config/vesktop";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.gnupg" =
+    { device = "/persist/home/ankhseraph/.gnupg";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.librewolf" =
+    { device = "/persist/home/ankhseraph/.librewolf";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.local/share/Signal" =
+    { device = "/persist/home/ankhseraph/.local/share/Signal";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.local/share/Steam" =
+    { device = "/persist/home/ankhseraph/.local/share/Steam";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.local/share/keyrings" =
+    { device = "/persist/home/ankhseraph/.local/share/keyrings";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.mozilla" =
+    { device = "/persist/home/ankhseraph/.mozilla";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.ssh" =
+    { device = "/persist/home/ankhseraph/.ssh";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/.steam" =
+    { device = "/persist/home/ankhseraph/.steam";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/Documents" =
+    { device = "/persist/home/ankhseraph/Documents";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/Pictures" =
+    { device = "/persist/home/ankhseraph/Pictures";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/Downloads" =
+    { device = "/persist/home/ankhseraph/Downloads";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/Videos" =
+    { device = "/persist/home/ankhseraph/Videos";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/avocatsite" =
+    { device = "/persist/home/ankhseraph/avocatsite";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/home/ankhseraph/nix-config" =
+    { device = "/persist/home/ankhseraph/nix-config";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/var/lib/NetworkManager" =
+    { device = "/persist/var/lib/NetworkManager";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  fileSystems."/var/lib/systemd" =
+    { device = "/persist/var/lib/systemd";
+      fsType = "none";
+      options = [ "bind" ];
+    };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/118B-A6D5";
+    { device = "/dev/disk/by-uuid/0798-6C94";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };

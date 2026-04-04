@@ -2,6 +2,8 @@
 
 Personal NixOS flake for the host `kuraokami`: a Wayland/Sway desktop tuned for low-latency audio, AMD GPU control (LACT), and a minimal, privacy‑conscious setup.
 
+Disclaimer: The code is mostly hand written and documented, however I do not hide my usage of LLMs. Review all changes carefully before applying.
+
 ## System Summary
 - **Host**: `kuraokami` (hostname set in `system/network/base.nix`)
 - **User**: configured via `username` in `flake.nix`

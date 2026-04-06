@@ -32,8 +32,8 @@ install.sh                # Disko-based install script (fresh installs)
 
 ## Build & Update
 ```bash
-sudo nixos-rebuild switch --flake ~/nix-config/#kuraokami
-sudo nixos-rebuild switch --flake ~/nix-config/#kuraokami --show-trace
+sudo nixos-rebuild switch --flake ~/nix-config/#kuraokami (or doas ...)
+sudo nixos-rebuild switch --flake ~/nix-config/#kuraokami --show-trace (or doas ...)
 nix flake update ~/nix-config
 ```
 - `nix-commit` (Zsh function) runs a rebuild, commits, and pushes if successful.
@@ -49,7 +49,7 @@ Secrets are encrypted with agenix and stored in the repo:
 ## Installation (Fresh Install)
 `install.sh` uses disko, generates a fresh `hardware-configuration.nix`, installs the flake, and copies this repo to the target system:
 - **Disk layout**: EFI (`/boot`) + ext4 root (`/`).
-- **Command**: `sudo ./install.sh` from a NixOS live ISO after cloning.
+- **Command**: `sudo ./install.sh` (or `doas ./install.sh`) from a NixOS live ISO after cloning.
 - **Age key**: paste when prompted or place at `/etc/age/key.txt` before running.
 - **Disk selection**: defaults to `/dev/nvme0n1` and will wipe the chosen disk.
 

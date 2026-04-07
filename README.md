@@ -4,6 +4,11 @@ Personal NixOS flake for the host `kuraokami`: a Wayland/Sway desktop tuned for 
 
 Disclaimer: The code is mostly hand written and documented, however I do not hide my usage of LLMs. Review all changes carefully before applying.
 
+## Additional Host: homeserver
+This repo also contains a headless homeserver config under `hosts/homeserver` and `modules/homeserver`.
+Use `HOMESERVER_SETUP.md` for the single‑age‑key setup steps on the server.
+Use `HOMESERVER_AGENTS.md` for the full AI agent checklist.
+
 ## System Summary (Current State)
 - **Host**: `kuraokami` (hostname set in `system/network/base.nix`)
 - **User**: configured via `username` in `flake.nix` (propagated through `specialArgs`)

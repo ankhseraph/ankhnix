@@ -1,6 +1,14 @@
 { config, pkgs, lib, ... }:
 
 {
+  programs.git = {
+    enable = true;
+    config = {
+      user.name = "ankhseraph";
+      user.email = "ankhseraph@codeberg.org";
+    };
+  };
+
   users.users.homeserver = {
     isNormalUser = true;
     description = "homeserver";

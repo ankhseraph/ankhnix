@@ -1,0 +1,19 @@
+tunnel: 39d923ab-011e-4e9c-a933-c9884203b940
+credentials-file: /etc/cloudflared/credentials.json
+
+ingress:
+  - hostname: dashboard.ankhseraph.com
+    service: http://portainer:9000
+  - hostname: music.ankhseraph.com
+    service: http://navidrome:4533
+  - hostname: search.ankhseraph.com
+    service: http://searxng:8080
+  - hostname: drive.ankhseraph.com
+    service: http://filebrowser:80
+  - hostname: vaultwarden.ankhseraph.com
+    service: http://vaultwarden:80
+  - hostname: mscd.ankhseraph.com
+    service: http://172.18.0.1:8090
+  - hostname: preview.ankhseraph.com
+    service: http://avocat-wordpress-1:80
+  - service: http_status:404

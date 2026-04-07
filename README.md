@@ -28,7 +28,7 @@ flake.nix                 # Flake inputs and nixosConfigurations
 hosts/                    # Per-host config, hardware-configuration, disko
 modules/                  # NixOS + home-manager modules
 secrets/                  # Agenix secrets + access map
-install.sh                # Disko-based install script (fresh installs)
+scripts/install.sh        # Disko-based install script (fresh installs)
 ```
 
 ## Build & Update
@@ -47,10 +47,12 @@ Secrets are encrypted with agenix and stored in the repo:
 
 `modules/system/secrets.nix` wires these into the system (e.g., `/run/agenix/nas-credentials`, user password hash, SSH key).
 
+Homeserver secrets include `homeserver-user-password.age`, `homeserver-navidrome-env.age`, `homeserver-searxng-env.age`, `homeserver-cloudflared-credentials.age`, and `homeserver-mscd-api-hash.age`.
+
 ## Installation (Fresh Install)
-`install.sh` uses disko, generates a fresh `hardware-configuration.nix`, installs the flake, and copies this repo to the target system:
+`scripts/install.sh` uses disko, generates a fresh `hardware-configuration.nix`, installs the flake, and copies this repo to the target system:
 - **Disk layout**: EFI (`/boot`) + ext4 root (`/`).
-- **Command**: `sudo ./install.sh` (or `doas ./install.sh`) from a NixOS live ISO after cloning.
+- **Command**: `sudo ./scripts/install.sh` (or `doas ./scripts/install.sh`) from a NixOS live ISO after cloning.
 - **Age key**: paste when prompted or place at `/etc/age/key.txt` before running.
 - **Disk selection**: defaults to `/dev/nvme0n1` and will wipe the chosen disk.
 

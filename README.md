@@ -3,7 +3,7 @@
 Personal NixOS flake for the host `kuraokami`: a Wayland/Sway desktop tuned for low‑latency audio, AMD GPU control (LACT), and a privacy‑conscious setup with home‑manager.
 
 ## Additional Host: homeserver
-This repo also contains a headless homeserver config under `hosts/homeserver` and `modules/server`, plus a laptop config under `hosts/nidhoggr` with `modules/laptop` and `modules/home-laptop`.
+This repo also contains a headless homeserver config under `hosts/homeserver` and `modules/server`, plus a laptop config under `hosts/nidhoggr` with `modules/laptop` and `modules/laptop/home`.
 Use `HOMESERVER_SETUP.md` for the single‑age‑key setup steps on the server.
 Use `HOMESERVER_AGENTS.md` for the full homeserver checklist.
 
@@ -21,6 +21,8 @@ Use `HOMESERVER_AGENTS.md` for the full homeserver checklist.
 - **GPU control**: LACT service + config in `modules/system/hardware/lact/config.yaml`
 - **VPN**: Mullvad
 - **Secrets**: agenix + `/etc/age/key.txt`
+- **Desktop apps**: Bolt Launcher wrapper (Mullvad excluded) + desktop entry on desktop/laptop profiles
+- **Laptop power**: ultra‑aggressive TLP battery profile (1.0 GHz cap, low perf policy, scheduler powersave)
 
 ## Repository Structure
 ```

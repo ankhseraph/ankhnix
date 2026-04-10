@@ -22,7 +22,7 @@ Use `HOMESERVER_AGENTS.md` for the full homeserver checklist.
 - **VPN**: Mullvad
 - **Secrets**: agenix + `/etc/age/key.txt`
 - **Desktop apps**: Bolt Launcher wrapper (Mullvad excluded) + desktop entry on desktop/laptop profiles
-- **Laptop power**: ultra‑aggressive TLP battery profile (1.0 GHz cap, low perf policy, scheduler powersave)
+- **Laptop power**: ultra‑aggressive TLP battery profile (1.0 GHz cap, low perf policy, scheduler powersave) + logind power keys via `services.logind.settings`
 
 ## Repository Structure
 ```

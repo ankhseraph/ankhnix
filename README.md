@@ -22,7 +22,7 @@ Use `HOMESERVER_AGENTS.md` for the full homeserver checklist.
 - **VPN**: Mullvad
 - **Secrets**: agenix + `/etc/age/key.txt`
 - **Desktop apps**: Bolt Launcher wrapper (Mullvad excluded) + desktop entry on desktop/laptop profiles
-- **Laptop power**: aggressive TLP battery profile (1.5 GHz cap, boost off) + logind power keys via `services.logind.settings`; laptop no longer autostarts Mullvad GUI or Blueman tray to save RAM
+- **Laptop power**: aggressive TLP battery profile (1.5 GHz cap, boost off) + logind power keys via `services.logind.settings`; desktop/laptop session does not autostart Mullvad GUI (use daemon/CLI) and laptop no longer autostarts Blueman tray to save RAM
 
 ## Repository Structure
 ```
@@ -66,7 +66,7 @@ Review `hosts/<host>/disko.nix` before running; it will wipe the target disk.
 - **CPU scheduling**: `scx_lavd` + ananicy rules.
 - **CPU governor**: `performance` via `powerManagement.cpuFreqGovernor`.
 - **GPU**: LACT daemon with hardened service and config in `modules/system/hardware/lact/config.yaml`.
-- **Network**: NetworkManager + systemd‑resolved (DNSSEC + DNS‑over‑TLS), firewall open for WireGuard UDP `51820` and TCP `10206`; laptop auto‑connects Mullvad on boot.
+- **Network**: NetworkManager + systemd‑resolved (DNSSEC + DNS‑over‑TLS), firewall open for WireGuard UDP `51820` and TCP `10206`; desktop/laptop auto‑connect Mullvad on boot.
 - **Privacy**: NetworkManager connectivity checks disabled; geoclue, gnome‑keyring, localsearch, tinysparql, packagekit disabled.
 - **Storage**: CIFS NAS mount at `/mnt/nas` using agenix‑managed credentials and automount.
 

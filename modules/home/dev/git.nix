@@ -5,7 +5,7 @@
     enable = true;
     settings.user = {
       name = "ankhseraph";
-      email = "homeserver@ankhseraph.git";
+      email = "git@ankhseraph.com";
     };
   };
 }

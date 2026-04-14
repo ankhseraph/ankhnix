@@ -5,7 +5,7 @@
     enable = true;
     config = {
       user.name = "ankhseraph";
-      user.email = "ankhseraph@codeberg.org";
+      user.email = "git@ankhseraph.com";
     };
   };
 

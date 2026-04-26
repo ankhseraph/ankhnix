@@ -22,7 +22,8 @@ Use `HOMESERVER_AGENTS.md` for the full homeserver checklist.
 - **VPN**: Mullvad
 - **Secrets**: agenix + `/etc/age/key.txt`
 - **Desktop apps**: Bolt Launcher wrapper (Mullvad excluded) + desktop entry on desktop/laptop profiles
-- **Laptop power**: aggressive TLP battery profile (1.5 GHz cap, boost off) + logind power keys via `services.logind.settings`; desktop/laptop session does not autostart Mullvad GUI (use daemon/CLI) and laptop no longer autostarts Blueman tray to save RAM
+- **Laptop power**: aggressive TLP battery profile (2 GHz cap, boost off, EPP power on BAT; full performance on AC), AC‑aware swayidle (dim/sleep on battery, 30min idle on AC), profile‑sync‑daemon, 4 GB tmpfs, power‑efficient workqueues, USB autosuspend, 80ms keyboard debounce (interception‑tools), waybar Fn+Q power profile indicator; desktop/laptop does not autostart Mullvad GUI (use daemon/CLI)
+- **Shared modules**: `modules/shared/` deduplicates sway config, host base, and home base across kuraokami and nidhoggr
 
 ## Repository Structure
 ```
@@ -87,12 +88,21 @@ Review `hosts/<host>/disko.nix` before running; it will wipe the target disk.
 - **Privacy toggles**: `modules/system/services/privacy.nix`
 - **Flatpak**: `modules/system/services/flatpak.nix`
 - **Home imports**: `modules/home/home.nix`
+- **Shared sway base**: `modules/shared/sway-base.nix`
+- **Shared host base**: `modules/shared/host-base.nix`
+- **Shared home base**: `modules/shared/home-base.nix`
 - **Sway keybinds + outputs**: `modules/home/desktop/sway.nix`
 - **Waybar config + scripts**: `modules/home/desktop/waybar/config.nix` + `modules/home/desktop/waybar/scripts/*`
 - **GTK/Qt theme**: `modules/home/desktop/theme.nix`
 - **Zsh config**: `modules/home/shell/zsh/zsh.nix` + `modules/home/shell/zsh/prompt.zsh`
 - **Alacritty**: `modules/home/shell/alacritty.nix`
 - **SSH + Codeberg key**: `modules/home/shell/ssh.nix`
+- **Laptop TLP + PSD**: `modules/laptop/system/power.nix`
+- **Laptop boot tuning**: `modules/laptop/system/boot.nix`
+- **Laptop keyboard debounce**: `modules/laptop/system/keyboard.nix`
+- **Laptop swayidle (AC‑aware)**: `modules/laptop/home/desktop/swayidle.nix`
+- **Laptop waybar + power profile**: `modules/laptop/home/desktop/waybar/config.nix`
+- **Laptop Firefox (auto‑tab‑discard)**: `modules/laptop/home/programs/firefox.nix`
 - **Firefox policy + profile**: `modules/home/programs/firefox.nix`
 - **Neovim (nixvim)**: `modules/home/programs/neovim/config.nix`
 - **Dev toolchains**: `modules/home/dev/packages.nix`
